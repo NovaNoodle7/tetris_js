@@ -1,0 +1,583 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Orbitron', monospace;
+    background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    overflow-x: auto;
+}
+
+.game-container {
+    width: 100%;
+    max-width: 1400px;
+    padding: 20px;
+}
+
+/* Mode Selection */
+.mode-selection {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.game-title {
+    font-size: 4rem;
+    font-weight: 900;
+    margin-bottom: 40px;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+    background-size: 400% 400%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: gradientShift 3s ease-in-out infinite;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.mode-buttons {
+    display: flex;
+    gap: 30px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.mode-btn {
+    padding: 15px 40px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    font-family: 'Orbitron', monospace;
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.mode-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(45deg, #764ba2 0%, #667eea 100%);
+}
+
+.mode-btn:active {
+    transform: translateY(-1px);
+}
+
+/* Game Area */
+.game-area {
+    width: 100%;
+}
+
+/* VS Mode Layout */
+.vs-container {
+    display: flex;
+    gap: 40px;
+    align-items: flex-start;
+    justify-content: center;
+    margin-bottom: 30px;
+}
+
+.player-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.vs-divider {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    padding: 20px;
+}
+
+.vs-text {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #ff6b6b;
+    text-shadow: 0 0 20px rgba(255, 107, 107, 0.5);
+    margin-bottom: 20px;
+}
+
+.game-status {
+    font-size: 1rem;
+    text-align: center;
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 25px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.vs-controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.player-label {
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    padding: 8px 20px;
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+    border-radius: 25px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.main {
+    display: flex;
+    gap: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    border-radius: 15px;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.container {
+    position: relative;
+}
+
+.game-board {
+    position: relative;
+}
+
+.gameBoard {
+    display: grid;
+    grid-template-columns: repeat(10, 30px);
+    grid-template-rows: repeat(20, 30px);
+    gap: 2px;
+    background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+    border: 3px solid #4ecdc4;
+    border-radius: 10px;
+    padding: 3px;
+    box-shadow: 
+        0 0 20px rgba(78, 205, 196, 0.3),
+        inset 0 0 20px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.gameBoard::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    right: -3px;
+    bottom: -3px;
+    background: linear-gradient(45deg, #4ecdc4, #45b7d1, #96ceb4, #4ecdc4);
+    border-radius: 10px;
+    z-index: -1;
+    animation: borderGlow 3s linear infinite;
+}
+
+@keyframes borderGlow {
+    0%, 100% { opacity: 0.7; }
+    50% { opacity: 1; }
+}
+
+.cell {
+    width: 30px;
+    height: 30px;
+    background: linear-gradient(145deg, #0d0d0d, #1a1a1a);
+    border-radius: 3px;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    position: relative;
+}
+
+.cell.filled {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.1);
+}
+
+.cell::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), transparent);
+    border-radius: 3px;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.cell.filled::before {
+    opacity: 1;
+}
+
+.cell.cI {
+    background: linear-gradient(135deg, #00F0F0, #00CCCC);
+    box-shadow: 0 0 15px rgba(0, 240, 240, 0.5);
+}
+
+.cell.cO {
+    background: linear-gradient(135deg, #F0F000, #CCCC00);
+    box-shadow: 0 0 15px rgba(240, 240, 0, 0.5);
+}
+
+.cell.cT {
+    background: linear-gradient(135deg, #A000F0, #8000CC);
+    box-shadow: 0 0 15px rgba(160, 0, 240, 0.5);
+}
+
+.cell.cS {
+    background: linear-gradient(135deg, #00F000, #00CC00);
+    box-shadow: 0 0 15px rgba(0, 240, 0, 0.5);
+}
+
+.cell.cZ {
+    background: linear-gradient(135deg, #F00000, #CC0000);
+    box-shadow: 0 0 15px rgba(240, 0, 0, 0.5);
+}
+
+.cell.cJ {
+    background: linear-gradient(135deg, #0000F0, #0000CC);
+    box-shadow: 0 0 15px rgba(0, 0, 240, 0.5);
+}
+
+.cell.cL {
+    background: linear-gradient(135deg, #F0A000, #CC8000);
+    box-shadow: 0 0 15px rgba(240, 160, 0, 0.5);
+}
+
+.game-info, .player-info {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    min-width: 200px;
+}
+
+.info-panel {
+    background: rgba(255, 255, 255, 0.08);
+    padding: 20px;
+    border-radius: 15px;
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.info-panel:hover {
+    background: rgba(255, 255, 255, 0.12);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+}
+
+.info-panel h3 {
+    margin-bottom: 15px;
+    font-size: 1.1rem;
+    text-align: center;
+    color: #4ecdc4;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-weight: 700;
+}
+
+.score {
+    font-size: 2rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 15px;
+    background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 20px rgba(255, 107, 107, 0.3);
+}
+
+.level, .lines {
+    font-size: 1rem;
+    text-align: center;
+    margin-bottom: 8px;
+    color: #b0b0b0;
+    font-weight: 500;
+}
+
+.level span, .lines span {
+    color: #4ecdc4;
+    font-weight: 700;
+}
+
+.next-board {
+    display: grid;
+    grid-template-columns: repeat(4, 25px);
+    grid-template-rows: repeat(4, 25px);
+    gap: 2px;
+    background: linear-gradient(145deg, #0a0a0a, #1a1a1a);
+    border: 2px solid #4ecdc4;
+    border-radius: 8px;
+    padding: 8px;
+    margin: 0 auto;
+    width: fit-content;
+    box-shadow: 0 0 15px rgba(78, 205, 196, 0.3);
+}
+
+.next-cell {
+    width: 25px;
+    height: 25px;
+    background: linear-gradient(145deg, #0d0d0d, #1a1a1a);
+    border-radius: 3px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: all 0.2s ease;
+}
+
+.next-cell.I {
+    background: linear-gradient(135deg, #00F0F0, #00CCCC);
+    box-shadow: 0 0 10px rgba(0, 240, 240, 0.4);
+}
+
+.next-cell.O {
+    background: linear-gradient(135deg, #F0F000, #CCCC00);
+    box-shadow: 0 0 10px rgba(240, 240, 0, 0.4);
+}
+
+.next-cell.T {
+    background: linear-gradient(135deg, #A000F0, #8000CC);
+    box-shadow: 0 0 10px rgba(160, 0, 240, 0.4);
+}
+
+.next-cell.S {
+    background: linear-gradient(135deg, #00F000, #00CC00);
+    box-shadow: 0 0 10px rgba(0, 240, 0, 0.4);
+}
+
+.next-cell.Z {
+    background: linear-gradient(135deg, #F00000, #CC0000);
+    box-shadow: 0 0 10px rgba(240, 0, 0, 0.4);
+}
+
+.next-cell.J {
+    background: linear-gradient(135deg, #0000F0, #0000CC);
+    box-shadow: 0 0 10px rgba(0, 0, 240, 0.4);
+}
+
+.next-cell.L {
+    background: linear-gradient(135deg, #F0A000, #CC8000);
+    box-shadow: 0 0 10px rgba(240, 160, 0, 0.4);
+}
+
+/* Buttons */
+.button-board, .vs-controls {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.button-board button, .vs-controls button {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    font-family: 'Orbitron', monospace;
+    background: linear-gradient(45deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    position: relative;
+    overflow: hidden;
+}
+
+.button-board button:hover, .vs-controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    background: linear-gradient(45deg, #764ba2 0%, #667eea 100%);
+}
+
+.button-board button:active, .vs-controls button:active {
+    transform: translateY(0);
+}
+
+.button-board button::before, .vs-controls button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.button-board button:hover::before, .vs-controls button:hover::before {
+    left: 100%;
+}
+
+/* Instructions */
+.instructions {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    padding: 20px;
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-width: 300px;
+    z-index: 1000;
+}
+
+.instructions h3 {
+    color: #4ecdc4;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.controls-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.control-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.9rem;
+}
+
+.key {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-weight: 700;
+    min-width: 30px;
+    text-align: center;
+    font-size: 0.8rem;
+}
+
+.action {
+    color: #b0b0b0;
+    font-size: 0.8rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .vs-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
+    
+    .vs-divider {
+        transform: rotate(90deg);
+        min-width: auto;
+        min-height: 120px;
+    }
+    
+    .vs-text {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .game-title {
+        font-size: 2.5rem;
+    }
+    
+    .mode-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .main {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .game-info, .player-info {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        min-width: auto;
+    }
+
+    .gameBoard {
+        grid-template-columns: repeat(10, 25px);
+        grid-template-rows: repeat(20, 25px);
+    }
+
+    .cell {
+        width: 25px;
+        height: 25px;
+    }
+    
+    .next-board {
+        grid-template-columns: repeat(4, 20px);
+        grid-template-rows: repeat(4, 20px);
+    }
+    
+    .next-cell {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .instructions {
+        position: static;
+        margin-top: 20px;
+        max-width: 100%;
+    }
+    
+    .vs-container {
+        gap: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .game-container {
+        padding: 10px;
+    }
+    
+    .gameBoard {
+        grid-template-columns: repeat(10, 20px);
+        grid-template-rows: repeat(20, 20px);
+    }
+
+    .cell {
+        width: 20px;
+        height: 20px;
+    }
+    
+    .button-board, .vs-controls {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .button-board button, .vs-controls button {
+        width: 100%;
+        max-width: 200px;
+    }
+}
