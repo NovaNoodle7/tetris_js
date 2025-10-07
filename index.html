@@ -1,164 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tetris - Human vs Bot</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+    <title>Tetrise</title>
 </head>
-
 <body>
     <div class="game-container">
-        <!-- Game Mode Selection -->
-        <div class="mode-selection" id="mode-selection">
-            <h1 class="game-title">TETRIS</h1>
-            <div class="mode-buttons">
-                <button class="mode-btn" id="single-player-btn">Single Player</button>
-                <button class="mode-btn" id="vs-bot-btn">Human vs Bot</button>
+      <div class="side-panel left">
+        <h1 class="logo">Tetrise</h1>
+        <div class="hud">
+          <div class="hud-group">
+            <label>Mode</label>
+            <select id="gameMode">
+              <option value="pvp">PvP</option>
+              <option value="vsBot">Vs Bot</option>
+            </select>
+          </div>
+          <div class="hud-group">
+            <label>Bot Difficulty</label>
+            <select id="difficultySelect" disabled>
+              <option value="easy">Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+            </select>
+          </div>
+          <div class="hud-group inline">
+            <button id="startBtn">Start</button>
+            <button id="pauseBtn">Pause</button>
+            <button id="restartBtn">Restart</button>
+          </div>
+          <div class="hud-group">
+            <div class="stat">Player 1 Score: <span id="score1">0</span></div>
+            <div class="stat">Player 2 Score: <span id="score2">0</span></div>
+          </div>
+          <div class="hud-group">
+            <div class="kbd">
+              <div class="kbd-title">Player 1</div>
+              <div>A/D: Move • S: Soft • W: Rotate • Space: Hard</div>
             </div>
+            <div class="kbd">
+              <div class="kbd-title">Player 2</div>
+              <div>←/→: Move • ↓: Soft • ↑: Rotate • Enter: Hard</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stage">
+        <!-- Player 1 Board -->
+        <div class="board-wrap">
+          <div id="nextTop1" class="next-on-board"></div>
+          <div class="board" id="board1"></div>
         </div>
 
-        <!-- Game Area -->
-        <div class="game-area" id="game-area" style="display: none;">
-            <!-- Single Player Mode -->
-            <div class="single-player-mode" id="single-player-mode">
-                <div class="main">
-                    <div class="game-board">
-                        <div class="player-label">PLAYER</div>
-                        <div class="gameBoard" id="game-board"></div>
-                    </div>
-                    <div class="game-info">
-                        <div class="info-panel">
-                            <h3>Score</h3>
-                            <div class="score" id="score">0</div>
-                            <div class="level">Level: <span id="level">1</span></div>
-                            <div class="lines">Lines: <span id="lines">0</span></div>
-                        </div>
-                        <div class="info-panel">
-                            <h3>Next Piece</h3>
-                            <div class="next-board" id="nextPiece-board"></div>
-                        </div>
-                        <div class="button-board">
-                            <button id="startBtn">Start Game</button>
-                            <button id="pauseBtn">Pause Game</button>
-                            <button id="resetBtn">Reset</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Human vs Bot Mode -->
-            <div class="vs-mode" id="vs-mode" style="display: none;">
-                <div class="vs-container">
-                    <!-- Human Player -->
-                    <div class="player-section">
-                        <div class="player-label">HUMAN</div>
-                        <div class="game-board">
-                            <div class="gameBoard" id="human-board"></div>
-                        </div>
-                        <div class="player-info">
-                            <div class="info-panel">
-                                <h3>Score</h3>
-                                <div class="score" id="human-score">0</div>
-                                <div class="level">Level: <span id="human-level">1</span></div>
-                                <div class="lines">Lines: <span id="human-lines">0</span></div>
-                            </div>
-                            <div class="info-panel">
-                                <h3>Next Piece</h3>
-                                <div class="next-board" id="human-next-board"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- VS Divider -->
-                    <div class="vs-divider">
-                        <div class="vs-text">VS</div>
-                        <div class="game-status" id="game-status">Ready to Start</div>
-                    </div>
-
-                    <!-- Bot Player -->
-                    <div class="player-section">
-                        <div class="player-label">BOT</div>
-                        <div class="game-board">
-                            <div class="gameBoard" id="bot-board"></div>
-                        </div>
-                        <div class="player-info">
-                            <div class="info-panel">
-                                <h3>Score</h3>
-                                <div class="score" id="bot-score">0</div>
-                                <div class="level">Level: <span id="bot-level">1</span></div>
-                                <div class="lines">Lines: <span id="bot-lines">0</span></div>
-                            </div>
-                            <div class="info-panel">
-                                <h3>Next Piece</h3>
-                                <div class="next-board" id="bot-next-board"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="vs-controls">
-                    <button id="vs-startBtn">Start Battle</button>
-                    <button id="vs-pauseBtn">Pause Battle</button>
-                    <button id="vs-resetBtn">Reset Battle</button>
-                    <button id="back-to-menu">Back to Menu</button>
-                </div>
-            </div>
+        <!-- Player 2 Board -->
+        <div class="board-wrap">
+          <div id="nextTop2" class="next-on-board"></div>
+          <div class="board" id="board2"></div>
         </div>
-
-        <!-- Game Instructions -->
-        <div class="instructions" id="instructions">
-            <h3>Controls</h3>
-            <div class="controls-grid">
-                <div class="control-item">
-                    <span class="key">A</span>
-                    <span class="action">Move Left</span>
-                </div>
-                <div class="control-item">
-                    <span class="key">D</span>
-                    <span class="action">Move Right</span>
-                </div>
-                <div class="control-item">
-                    <span class="key">S</span>
-                    <span class="action">Rotate</span>
-                </div>
-                <div class="control-item">
-                    <span class="key">F</span>
-                    <span class="action">Soft Drop</span>
-                </div>
-                <div class="control-item">
-                    <span class="key">Z</span>
-                    <span class="action">Hard Drop</span>
-                </div>
-                <div class="control-item">
-                    <span class="key">P</span>
-                    <span class="action">Pause</span>
-                </div>
-            </div>
-        </div>
+      </div>
     </div>
-    <script src="script.js">
-        // const createBoard = () => {
-        //     const gameBoard = document.getElementById('game-board');
-        //     for (let y = 0; y < 20 * 10; y++) {
-        //         const cell = document.createElement('div');
-        //         cell.className = 'cell';
-        //         gameBoard.appendChild(cell);
-        //     }
-        // }
-        // const nextBoard = () => {
-        //     const nextPiece = document.getElementById('next-board');
-        //     for (let y = 0; y < 4 * 4; y++) {
-        //         const cell = document.createElement('div');
-        //         cell.className = 'next-cell';
-        //         nextPiece.appendChild(cell);
-        //     }
-        // }
-        // createBoard();
-        // nextBoard();
-    </script>
+    <script src="./script.js"></script>
 </body>
-
 </html>
